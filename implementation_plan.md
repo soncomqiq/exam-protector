@@ -740,7 +740,56 @@ sequenceDiagram
 ## Open Questions
 
 > [!IMPORTANT]
-> 1. **Authentication scope**: Should we support OAuth2 / SSO (e.g., Google login), or email/password only for the initial version?
-> 2. **Webcam proctoring**: Do you want webcam capture as a future phase, or is screen sharing + tab monitoring sufficient for v1?
-> 3. **Deployment target**: Docker Compose for local dev? Cloud deployment (AWS/GCP)?
-> 4. **Question types**: Should v1 support file-upload answers, or only MCQ + short answer + essay?
+> 1. **Authentication scope**: Use email/password with JWT for the initial version; OAuth2/SSO can be added later as an extension.
+> 2. **Webcam proctoring**: Not required for MVP; screen‑sharing + tab‑monitoring is sufficient. Webcam capture can be introduced in a future phase.
+> 3. **Deployment target**: Develop and test locally with Docker Compose; production will be containerized on AWS (ECS/Fargate) with optional GCP Cloud Run support.
+> 4. **Question types**: Support MCQ, short answer, and essay in v1. File‑upload question type will be deferred to a later release.
+
+## 10. Implementation Timeline
+
+| Phase | Duration | Key Deliverables |
+|-------|----------|------------------|
+| Phase 1: Core Backend & DB | 2 weeks | Entities, Repositories, Auth, Exam Service, Submission Service, Violation Service |
+| Phase 2: Frontend Foundations | 1 week | Vite setup, Ant Design theme, API client, routing |
+| Phase 3: Anti‑Cheat Hooks | 2 weeks | `useTabMonitor`, `useScreenShare`, `useHeartbeat`, `useDevToolsDetect` |
+| Phase 4: UI Pages & Integration | 2 weeks | Auth pages, Dashboard, Exam creation, Exam session, Results |
+| Phase 5: Testing & Hardening | 1 week | Automated tests, integration tests, security review |
+| Phase 6: Deployment & Monitoring | 1 week | Docker Compose, CI/CD pipeline, performance testing |
+
+## 11. Future Enhancements
+
+- Webcam proctoring with WebRTC streams.
+- AI‑based answer plagiarism detection.
+- Support for file‑upload question types.
+- Multi‑language localization.
+- Admin analytics dashboard.
+
+## 12. Acceptance Criteria
+
+- All API endpoints conform to OpenAPI spec and are secured with JWT.
+- Anti‑cheat hooks detect and log violations with >95% accuracy in manual test suite.
+- Exams automatically lock after exceeding `max_tab_violations`.
+- Grace period timer works correctly on screen‑share stop.
+- End‑to‑end flow passes integration tests with Testcontainers.
+- Deployment script launches both frontend and backend with a single `docker-compose up`.
+## 13. Risks & Mitigations
+
+- **Performance under load**: WebSocket connections may strain server resources. Mitigation: enable connection pooling, configure max connections, and conduct load testing.
+- **Cheat detection evasion**: Advanced users might bypass client-side hooks. Mitigation: server‑side heartbeat validation and tamper‑resistant logging.
+- **Data privacy**: Violation logs contain timestamps and potentially user behavior data. Mitigation: encrypt logs at rest and enforce strict access controls.
+- **Deployment complexity**: Multi‑container setup may cause configuration drift. Mitigation: use Docker Compose with version‑controlled environment files.
+
+## 14. Appendix
+
+- **Architecture diagram**: ![Architecture Diagram](file:///d:/We-Stride/Exam-Protector/architecture_diagram.png)
+- **API specification**: OpenAPI 3.0 document located at `backend/openapi.yaml`.
+- **Sequence diagrams**: See `docs/sequence_diagrams.md` for detailed flow charts.
+
+## 15. Glossary
+
+- **JWT**: JSON Web Token, used for stateless authentication.
+- **WebSocket**: Persistent bi‑directional communication channel.
+- **Heartbeat**: Periodic signal sent from client to server to confirm active session.
+- **Grace period**: Time allowed for the student to resume screen sharing after interruption.
+- **Violation**: Any detected cheating behavior, logged for review.
+
