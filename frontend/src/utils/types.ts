@@ -38,6 +38,8 @@ export interface Submission {
   id: number;
   examId: number;
   examTitle: string;
+  studentName: string;
+  studentEmail: string;
   status: 'IN_PROGRESS' | 'SUBMITTED' | 'AUTO_SUBMITTED' | 'LOCKED';
   startedAt: string;
   submittedAt: string | null;

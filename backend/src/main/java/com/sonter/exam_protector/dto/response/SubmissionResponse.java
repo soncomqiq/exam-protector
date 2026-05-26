@@ -16,6 +16,8 @@ public class SubmissionResponse {
     private Long id;
     private Long examId;
     private String examTitle;
+    private String studentName;
+    private String studentEmail;
     private SubmissionStatus status;
     private LocalDateTime startedAt;
     private LocalDateTime submittedAt;

@@ -192,6 +192,8 @@ public class SubmissionService {
                 .id(sub.getId())
                 .examId(exam.getId())
                 .examTitle(exam.getTitle())
+                .studentName(sub.getUser().getFullName())
+                .studentEmail(sub.getUser().getEmail())
                 .status(sub.getStatus())
                 .startedAt(sub.getStartedAt())
                 .submittedAt(sub.getSubmittedAt())

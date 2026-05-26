@@ -15,7 +15,7 @@ interface RecordingChunk {
 }
 
 export function ResultsPage() {
-  const { examId } = useParams();
+  const { id: examId } = useParams();
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
   const [recordingModal, setRecordingModal] = useState(false);
@@ -51,7 +51,7 @@ export function ResultsPage() {
   };
 
   const columns = [
-    { title: 'Student', dataIndex: 'examTitle', key: 'student' },
+    { title: 'Student', dataIndex: 'studentName', key: 'student' },
     {
       title: 'Status',
       dataIndex: 'status',
