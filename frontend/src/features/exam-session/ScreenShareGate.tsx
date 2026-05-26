@@ -35,7 +35,7 @@ export function ScreenShareGate({ onReady, startSharing }: Props) {
         {error && (
           <Alert
             type="error"
-            message="Screen sharing is required to start this exam. Please allow screen sharing."
+            message="You must share your ENTIRE SCREEN (not a window or tab). Please try again and select the full screen option."
             style={{ marginBottom: 16 }}
           />
         )}

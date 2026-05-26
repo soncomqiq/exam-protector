@@ -103,6 +103,19 @@ CREATE TABLE heartbeat_logs (
     INDEX idx_sub_time (submission_id, received_at)
 );
 
+CREATE TABLE screen_recordings (
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    submission_id   BIGINT NOT NULL,
+    chunk_index     INT NOT NULL,
+    file_path       VARCHAR(500) NOT NULL,
+    file_size       BIGINT NOT NULL DEFAULT 0,
+    mime_type       VARCHAR(100) NOT NULL DEFAULT 'video/webm',
+    duration_ms     BIGINT DEFAULT 0,
+    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (submission_id) REFERENCES exam_submissions(id),
+    INDEX idx_sub_chunk (submission_id, chunk_index)
+);
+
 -- ============================================================
 -- SEED DATA: Test accounts + sample exam
 -- Password for all accounts: password123

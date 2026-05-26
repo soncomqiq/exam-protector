@@ -25,20 +25,27 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        String token = null;
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
-            if (jwtProvider.validateToken(token)) {
-                String email = jwtProvider.getEmailFromToken(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+            token = header.substring(7);
+        }
 
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        // Fallback: accept token as query param (for video/stream endpoints)
+        if (token == null) {
+            token = request.getParameter("token");
+        }
 
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
+        if (token != null && jwtProvider.validateToken(token)) {
+            String email = jwtProvider.getEmailFromToken(token);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+
+            UsernamePasswordAuthenticationToken auth =
+                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
         filterChain.doFilter(request, response);
